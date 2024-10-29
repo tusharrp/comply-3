@@ -1,5 +1,6 @@
 /* Sidebar Styling */
 .sidebar {
+  font-family: 'Inter', Arial, sans-serif; /* or use 'Roboto' if you chose that */
   width: 280px;
   background: linear-gradient(135deg, #2b2b2b, #232323);
   color: #fafafa;
@@ -13,6 +14,11 @@
   box-shadow: 3px 0 12px rgba(0, 0, 0, 0.25);
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+/* Other text classes */
+.email-input-field, .add-button, .approval-button, .training-button, .remove-button, .collaborator-item, .doc-button {
+  font-family: 'Inter', Arial, sans-serif;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -29,6 +35,7 @@
 }
 
 h3 {
+  font-family: 'Inter', Arial, sans-serif;
   font-size: 1.3rem;
   color: #e6e6e6;
   margin-bottom: 12px;
