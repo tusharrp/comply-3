@@ -1,4 +1,3 @@
-// src/components/TextEditor.jsx
 import React, { useEffect, useCallback, useImperativeHandle, useState, forwardRef } from 'react';
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
@@ -24,12 +23,19 @@ const TextEditor = forwardRef((props, ref) => {
   const { id: documentId } = useParams();
   const [quill, setQuill] = useState(null);
   const [isSaving, setIsSaving] = useState(false); // State for saving status
+  const [hasContent, setHasContent] = useState(false); // State to track if content is present
 
   // Expose methods to parent via ref
   useImperativeHandle(ref, () => ({
     getEditorInstance: () => quill,
     getText: () => (quill ? quill.getText() : ''),
     getSelection: () => (quill ? quill.getSelection() : null),
+    setGeneratedText: (text) => {
+      if (quill) {
+        quill.setText(text);       // Set the generated text
+        setHasContent(text.trim().length > 0); // Show "+" button if content is present
+      }
+    }
   }));
 
   // Initialize Quill editor
@@ -50,11 +56,14 @@ const TextEditor = forwardRef((props, ref) => {
     setQuill(q);
   }, []);
 
-  // Enable editor once it's ready
+  // Enable editor and set content check once it's ready
   useEffect(() => {
     if (quill) {
       quill.enable();
       quill.root.style.color = 'black'; // Ensure text color is readable
+      
+      // Check initial content to update hasContent
+      setHasContent(quill.getText().trim().length > 0);
     }
   }, [quill]);
 
@@ -67,7 +76,6 @@ const TextEditor = forwardRef((props, ref) => {
       // Simulate an API call with a timeout (replace this with your actual API call)
       setTimeout(() => {
         // Assume save is successful; implement your save logic here
-        // If there's an error, you can use toast.error() here
         toast.success('Content saved successfully!'); 
         setIsSaving(false); // Reset saving status after saving
       }, 1000); // Simulated save delay (1 second)
@@ -77,22 +85,40 @@ const TextEditor = forwardRef((props, ref) => {
   // Create a debounced version of the saveContent function
   const debouncedSaveContent = useCallback(debounce(saveContent, 1000), [quill]); // Adjust the debounce time as necessary
 
-  // Example of how to trigger save on user input
+  // Track content changes to show/hide the "+" button
   useEffect(() => {
     if (quill) {
-      quill.on('text-change', debouncedSaveContent); // Attach event listener to save on text change
-    }
+      const handleTextChange = () => {
+        const content = quill.getText().trim();
+        setHasContent(content.length > 0); // Update hasContent based on text presence
+      };
 
-    return () => {
-      if (quill) {
-        quill.off('text-change', debouncedSaveContent); // Clean up event listener on unmount
-      }
-    };
-  }, [quill, debouncedSaveContent]);
+      quill.on('text-change', handleTextChange); // Attach event listener to track content changes
+      return () => quill.off('text-change', handleTextChange); // Clean up event listener on unmount
+    }
+  }, [quill]);
 
   return (
     <div className="editor-container">
       <div className="quill-wrapper" ref={wrapperRef} />
+      
+      {/* Conditionally render the "+" symbol button based on content */}
+      {hasContent && (
+        <div className="editor-button-container">
+          <button
+            className="add-symbol-button"
+            onClick={() => {
+              if (quill) {
+                const length = quill.getLength(); // Get current length of the content
+                quill.insertText(length - 1, '+'); // Insert '+' at the end of content
+              }
+            }}
+          >
+            +
+          </button>
+        </div>
+      )}
+
       <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar closeOnClick draggable pauseOnHover />
     </div>
   );

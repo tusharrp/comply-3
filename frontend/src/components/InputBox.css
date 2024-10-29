@@ -56,10 +56,6 @@
   background-color: #005bb5;
 }
 
-.input-box button + button {
-  margin-left: 5px; /* Space between Send and + button */
-}
-
 @media (max-width: 768px) {
   .input-box {
     width: 95%;

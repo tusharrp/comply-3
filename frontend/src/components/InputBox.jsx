@@ -37,9 +37,6 @@ const InputBox = forwardRef((props, ref) => {
       <button onClick={handleSend} disabled={isSending}>
         {isSending ? 'Sending...' : 'Send'}
       </button>
-      <button onClick={handleAddSymbol} disabled={isSending}>
-        +
-      </button>
     </div>
   );
 });

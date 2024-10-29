@@ -55,3 +55,19 @@
     font-size: 14px;
   }
 }
+
+.add-symbol-button {
+  font-size: 18px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 300px;
+  margin-left: 690px;
+  margin-top: 30px;
+}
+
+.add-symbol-button:hover {
+  background-color: #0056b3;
+}
