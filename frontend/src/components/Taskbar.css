@@ -1,0 +1,267 @@
+/* Taskbar Styling */
+.taskbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    padding: 15px 30px;
+    height: 70px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.3s ease;
+  }
+  
+  .logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .logo-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .logo span {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+/* Enhanced Dropdown Group */
+.dropdown-group {
+  display: flex;
+  gap: 20px;
+}
+
+/* Dropdown Styling */
+.dropdown {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #2d2d2d;
+  color: white;
+  border: 2px solid #3a3a3a; /* Adding border for better visibility */
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  font-size: 1rem;
+  position: relative;
+}
+
+.dropdown:hover {
+  background-color: #444;
+  border-color: #044289; /* Highlighting border on hover */
+}
+
+/* Custom Select Option Styling */
+.dropdown option {
+  background-color: #2d2d2d; /* Match dropdown background */
+  color: white;
+  padding: 10px; /* Add padding for better touch targets */
+}
+
+/* Focus State for Accessibility */
+.dropdown:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(3, 120, 254, 0.5); /* Outline on focus */
+}
+
+/* Dropdown Content Specific Styles */
+.dropdown-content {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  background-color: #2d2d2d;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px; /* Wider dropdown for content */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: dropdownFade 0.3s ease;
+}
+
+/* Individual Dropdown Items */
+.dropdown-item {
+  background-color: #3a3a3a; /* Background for items */
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center; /* Center icon and text */
+  gap: 10px;
+}
+
+.dropdown-item:hover {
+  background-color: #444; /* Hover effect */
+}
+
+/* Icon Styling in Dropdown Items */
+.dropdown-item-icon {
+  font-size: 1.2rem; /* Adjust icon size */
+}
+  
+/* Profile Menu */
+.profile-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 15px;
+  }
+  
+  .profile-icon {
+    font-size: 2.6rem;
+    color: #ddd;
+    transition: color 0.3s ease;
+  }
+  
+  .profile-icon:hover {
+    color: #58a6ff;
+  }
+  
+  /* Dropdown Content */
+  .dropdown-content {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #2d2d2d;
+    padding: 10px;
+    border-radius: 10px;
+    width: 160px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: dropdownFade 0.3s ease;
+  }
+  
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .profile-btn, .logout-btn {
+    background-color: #3a3a3a;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .profile-btn:hover, .logout-btn:hover {
+    background-color: #555;
+    transform: scale(1.05);
+  }
+  
+  .logout-btn {
+    background-color: #d9534f;
+  }
+  
+  .logout-btn:hover {
+    background-color: #c9302c;
+  }
+  
+  .dropdown-icon {
+    font-size: 1.2rem;
+  }
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #2d2d2d;
+    padding: 8px 12px;
+    border-radius: 20px;
+    width: 40%;
+    position: relative;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    font-size: 1rem;
+    padding-left: 10px;
+  }
+  
+  .search-icon {
+    color: #58a6ff;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .search-icon:hover {
+    transform: scale(1.1);
+  }
+  
+/* Notification Menu */
+.notification-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: -20px; 
+
+}
+
+.notification-icon {
+  font-size: 1.8rem;
+  color: #ddd;
+  transition: color 0.3s ease;
+}
+
+.notification-icon:hover {
+  color: #58a6ff;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+  position: absolute;
+  top: 70px; /* Aligns with taskbar height */
+  right: 0;
+  background-color: #2d2d2d;
+  padding: 10px;
+  border-radius: 8px;
+  width: 220px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: dropdownFade 0.3s ease;
+  z-index: 1000;
+}
+
+/* Individual Notification Items */
+.notification-item {
+  background-color: #3a3a3a;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: default;
+}
+
+.notification-item:hover {
+  background-color: #444;
+}

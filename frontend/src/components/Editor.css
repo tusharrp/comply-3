@@ -1,0 +1,57 @@
+/* src/components/TextEditor.css */
+
+.editor-container {
+  position: relative;
+  height: calc(100vh - 60px);
+  padding: 10px;
+  background-color: #ffffff; /* Change to a brighter background for contrast */
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+.quill-wrapper {
+  height: 75%;
+  overflow-y: auto;
+  border: 1px solid #cdcdcd;
+  border-radius: 8px;
+}
+
+/* Toolbar improvements */
+.ql-toolbar {
+  background-color: #f0f0f0; /* Softer toolbar background */
+  border-bottom: 1px solid #ddd;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Customize toolbar button styles */
+.ql-toolbar .ql-picker {
+  color: #333; /* Button color */
+}
+
+.ql-container {
+  border-radius: 0 0 8px 8px;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Placeholder style */
+.ql-editor.ql-blank::before {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .editor-container {
+    padding: 5px;
+  }
+
+  .ql-container {
+    font-size: 14px;
+  }
+}

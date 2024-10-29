@@ -1,0 +1,34 @@
+/* src/components/Chat.css */
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh; /* Full viewport height */
+  width: 100%; /* Full width */
+  padding: 0; /* Reset padding for cleaner look */
+  background-color: #1e1e1e; /* Dark background for chat */
+  box-sizing: border-box;
+}
+
+.messages {
+  flex-grow: 1; /* Take up available space */
+  overflow-y: auto; /* Enable scrolling for messages */
+  padding: 10px; /* Padding around message area */
+  border-bottom: 1px solid #333; /* Divider between messages and input */
+}
+
+.input-box {
+  display: flex; /* Use flex for layout */
+  padding: 10px; /* Padding for input box */
+  background-color: #2d2d2d; /* Dark background for input */
+  border-top: 1px solid #444; /* Slightly lighter divider */
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    padding: 5px; /* Reduce padding on smaller screens */
+  }
+}
+
+
