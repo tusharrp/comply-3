@@ -131,7 +131,7 @@
   /* Dropdown Content */
   .dropdown-content {
     position: absolute;
-    top: 70px;
+    top: 30px;
     right: 0;
     background-color: #2d2d2d;
     padding: 10px;
@@ -239,7 +239,7 @@
 /* Notification Dropdown */
 .notification-dropdown {
   position: absolute;
-  top: 70px; /* Aligns with taskbar height */
+  top: 30px; /* Aligns with taskbar height */
   right: 0;
   background-color: #2d2d2d;
   padding: 10px;
