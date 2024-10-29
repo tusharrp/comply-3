@@ -1,22 +1,27 @@
-// src/components/InputBox.jsx
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import './InputBox.css';
 
 const InputBox = forwardRef((props, ref) => {
   const [input, setInput] = useState('');
-  const [isSending, setIsSending] = useState(false); // To show loading state
+  const [isSending, setIsSending] = useState(false);
 
   const handleSend = () => {
     if (input.trim()) {
       setIsSending(true);
       props.onSubmit(input);
       setInput('');
-      setTimeout(() => setIsSending(false), 1000); // Simulate a sending delay
+      setTimeout(() => setIsSending(false), 1000);
     }
   };
 
+  const handleAddSymbol = () => {
+    // Define what the "+" button should do, e.g., add a "+" symbol to the input
+    setInput((prev) => `${prev} +`);
+  };
+
   useImperativeHandle(ref, () => ({
-    handleSend
+    handleSend,
+    handleAddSymbol,
   }));
 
   return (
@@ -26,11 +31,14 @@ const InputBox = forwardRef((props, ref) => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Type your message here..."
-        aria-label="Message input" // Accessibility improvement
-        disabled={isSending} // Disable input while sending
+        aria-label="Message input"
+        disabled={isSending}
       />
       <button onClick={handleSend} disabled={isSending}>
         {isSending ? 'Sending...' : 'Send'}
+      </button>
+      <button onClick={handleAddSymbol} disabled={isSending}>
+        +
       </button>
     </div>
   );
