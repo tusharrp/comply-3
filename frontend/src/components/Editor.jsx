@@ -1,11 +1,15 @@
 import React, { useEffect, useCallback, useImperativeHandle, useState, forwardRef } from 'react';
 import Quill from 'quill';
+import MarkdownShortcuts from 'quilljs-markdown';
+// import 'quilljs-markdown/dist/quilljs-markdown-common-style.css' // recommend import css, @option improve common style
 import 'quill/dist/quill.snow.css';
 import { useParams } from 'react-router-dom';
 import './Editor.css'; // Custom CSS for better styling
 import { ToastContainer, toast } from 'react-toastify'; // For notifications
 import 'react-toastify/dist/ReactToastify.css'; // Include styles for notifications
 import debounce from "lodash/debounce"; // Ensure lodash is imported
+
+
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -45,11 +49,24 @@ const TextEditor = forwardRef((props, ref) => {
     wrapper.innerHTML = ''; // Clean previous editor instance
     const editor = document.createElement('div');
     wrapper.append(editor);
-
+    Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
     const q = new Quill(editor, {
       theme: 'snow',
-      modules: { toolbar: TOOLBAR_OPTIONS },
+      modules: { toolbar: TOOLBAR_OPTIONS,
+        markdownShortcuts: {
+          bold: true,
+          italic: true,
+          strike: true,
+          link: true,
+          header: true,
+          blockquote: true,
+          code: true,
+          list: true
+        }
+       },
+
     });
+    new MarkdownShortcuts(q);
 
     q.disable(); // Disable until content loads
     q.setText('Loading...'); // Temporary loading state
@@ -100,6 +117,8 @@ const TextEditor = forwardRef((props, ref) => {
 
   return (
     <div className="editor-container">
+      <script src="https://cdn.jsdelivr.net/npm/quilljs-markdown@latest/dist/quilljs-markdown.min.js"></script>
+
       <div className="quill-wrapper" ref={wrapperRef} />
       
       {/* Conditionally render the "+" symbol button based on content */}
