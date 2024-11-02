@@ -1,15 +1,13 @@
 import React, { useEffect, useCallback, useImperativeHandle, useState, forwardRef } from 'react';
 import Quill from 'quill';
 import MarkdownShortcuts from 'quilljs-markdown';
-// import 'quilljs-markdown/dist/quilljs-markdown-common-style.css' // recommend import css, @option improve common style
 import 'quill/dist/quill.snow.css';
 import { useParams } from 'react-router-dom';
-import './Editor.css'; // Custom CSS for better styling
-import { ToastContainer, toast } from 'react-toastify'; // For notifications
-import 'react-toastify/dist/ReactToastify.css'; // Include styles for notifications
-import debounce from "lodash/debounce"; // Ensure lodash is imported
-
-
+import './Editor.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import debounce from "lodash/debounce";
+import { marked } from 'marked'; // Import marked
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -26,33 +24,33 @@ const TOOLBAR_OPTIONS = [
 const TextEditor = forwardRef((props, ref) => {
   const { id: documentId } = useParams();
   const [quill, setQuill] = useState(null);
-  const [isSaving, setIsSaving] = useState(false); // State for saving status
-  const [hasContent, setHasContent] = useState(false); // State to track if content is present
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
 
-  // Expose methods to parent via ref
   useImperativeHandle(ref, () => ({
     getEditorInstance: () => quill,
     getText: () => (quill ? quill.getText() : ''),
     getSelection: () => (quill ? quill.getSelection() : null),
     setGeneratedText: (text) => {
       if (quill) {
-        quill.setText(text);       // Set the generated text
-        setHasContent(text.trim().length > 0); // Show "+" button if content is present
+        const html = marked(text); // Convert Markdown to HTML
+        const delta = quill.clipboard.convert(html); // Convert HTML to Delta format
+        quill.setContents(delta); // Set formatted content in the editor
       }
     }
   }));
-
-  // Initialize Quill editor
+  
   const wrapperRef = useCallback((wrapper) => {
     if (!wrapper) return;
 
-    wrapper.innerHTML = ''; // Clean previous editor instance
+    wrapper.innerHTML = '';
     const editor = document.createElement('div');
     wrapper.append(editor);
     Quill.register('modules/markdownShortcuts', MarkdownShortcuts);
     const q = new Quill(editor, {
       theme: 'snow',
-      modules: { toolbar: TOOLBAR_OPTIONS,
+      modules: {
+        toolbar: TOOLBAR_OPTIONS,
         markdownShortcuts: {
           bold: true,
           italic: true,
@@ -63,73 +61,78 @@ const TextEditor = forwardRef((props, ref) => {
           code: true,
           list: true
         }
-       },
-
+      },
     });
     new MarkdownShortcuts(q);
 
-    q.disable(); // Disable until content loads
-    q.setText('Loading...'); // Temporary loading state
+    q.disable();
+    q.setText('Loading...');
     setQuill(q);
   }, []);
 
-  // Enable editor and set content check once it's ready
   useEffect(() => {
     if (quill) {
       quill.enable();
-      quill.root.style.color = 'black'; // Ensure text color is readable
-      
-      // Check initial content to update hasContent
+      quill.root.style.color = 'black';
+
       setHasContent(quill.getText().trim().length > 0);
+
+      // Add paste handler for markdown
+      quill.root.addEventListener('paste', handlePaste);
+      return () => quill.root.removeEventListener('paste', handlePaste);
     }
   }, [quill]);
 
-  // Function to handle content save
+  const handlePaste = useCallback((e) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text');
+    if (text) {
+      const html = marked(text); // Convert Markdown to HTML
+      const delta = quill.clipboard.convert(html);
+      quill.setContents(delta); // Replace editor content with formatted HTML
+    }
+  }, [quill]);
+
   const saveContent = () => {
     if (quill && !isSaving) {
-      const content = quill.root.innerHTML; // Get editor content
-      setIsSaving(true); // Set saving status to true
-      
-      // Simulate an API call with a timeout (replace this with your actual API call)
+      const content = quill.root.innerHTML;
+      setIsSaving(true);
+
       setTimeout(() => {
-        // Assume save is successful; implement your save logic here
-        toast.success('Content saved successfully!'); 
-        setIsSaving(false); // Reset saving status after saving
-      }, 1000); // Simulated save delay (1 second)
+        toast.success('Content saved successfully!');
+        setIsSaving(false);
+      }, 1000);
     }
   };
 
-  // Create a debounced version of the saveContent function
-  const debouncedSaveContent = useCallback(debounce(saveContent, 1000), [quill]); // Adjust the debounce time as necessary
+  const debouncedSaveContent = useCallback(debounce(saveContent, 1000), [quill]);
 
-  // Track content changes to show/hide the "+" button
   useEffect(() => {
     if (quill) {
       const handleTextChange = () => {
         const content = quill.getText().trim();
-        setHasContent(content.length > 0); // Update hasContent based on text presence
+        setHasContent(content.length > 0);
+        debouncedSaveContent();
       };
 
-      quill.on('text-change', handleTextChange); // Attach event listener to track content changes
-      return () => quill.off('text-change', handleTextChange); // Clean up event listener on unmount
+      quill.on('text-change', handleTextChange);
+      return () => quill.off('text-change', handleTextChange);
     }
-  }, [quill]);
+  }, [quill, debouncedSaveContent]);
+  
 
   return (
     <div className="editor-container">
-      <script src="https://cdn.jsdelivr.net/npm/quilljs-markdown@latest/dist/quilljs-markdown.min.js"></script>
-
       <div className="quill-wrapper" ref={wrapperRef} />
-      
-      {/* Conditionally render the "+" symbol button based on content */}
+
       {hasContent && (
         <div className="editor-button-container">
           <button
             className="add-symbol-button"
             onClick={() => {
               if (quill) {
-                const length = quill.getLength(); // Get current length of the content
-                quill.insertText(length - 1, '+'); // Insert '+' at the end of content
+                const length = quill.getLength();
+                quill.insertText(length - 1, '+');
               }
             }}
           >

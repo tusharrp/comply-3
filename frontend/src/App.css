@@ -19,7 +19,7 @@ html, body {
 .app-container {
   display: flex;
   height: 100vh;
-  width: 85vw; /* 85% width of the viewport */
+  width: 100vw; /* 85% width of the viewport */
   margin-left: auto; /* Align the container to the right */
   background-color: #1f1f1f; /* Slightly darker background for the container */
   color: #f3f3f3;

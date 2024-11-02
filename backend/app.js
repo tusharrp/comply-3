@@ -37,7 +37,7 @@ app.post('/api/gemini', async (req, res) => {
         ],
         });
 
-        const result = await model.generateContent(curatedPrompt);
+        const result = await model.generateContent(curatedPrompt, {stream: true});
 
         const response = result.response;
         console.log(response.text());

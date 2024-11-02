@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import TextEditor from './components/Editor';
 import InputBox from './components/InputBox';
 import Taskbar from './components/Taskbar';
+import Console from './components/Console';
 
 function App() {
   const [editorContent, setEditorContent] = useState(''); // State to hold editor content
@@ -30,12 +31,8 @@ function App() {
 
   const handleEditorChange = (data) => {
     const editor = editorRef.current.getEditorInstance();
-    const text = editor.getText();
-    const selection = editor.getSelection();
-    const newText = data;  // The new text to replace the selected text
-    editor.deleteText(selection.index, selection.length);  // Remove the old text
-    editor.insertText(selection.index, newText);
-  }
+    editor.setGeneratedText(data); // This will set the new content in the editor
+  };
 
   // Function to handle form submission from InputBox
   const handleSubmit = async (input) => {
@@ -84,6 +81,7 @@ function App() {
         </div>
         <InputBox ref={inputRef} onSubmit={handleSubmit} />  {/* Pass handleSubmit to InputBox */}
       </div>
+      <Console />
     </div>
   );
 }

@@ -1,0 +1,24 @@
+/* Main container styling for Console */
+.console {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space between top and bottom sections */
+    width: 200px;                  /* Sidebar width */
+    height: 100vh;                 /* Full viewport height */
+    background-color: #222;        /* Sidebar background color */
+    color: white;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); /* Shadow on left side */
+}
+
+/* Top section styling */
+.console-top {
+    margin-bottom: 20px;
+    height: 50vh;
+}
+
+/* Bottom section styling */
+.console-bottom {
+    margin-top: auto;
+    height: 50vh;
+}
