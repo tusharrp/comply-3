@@ -8,6 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import debounce from "lodash/debounce";
 import { marked } from 'marked'; // Import marked
+import TurndownService from 'turndown';
+import { convertHtmlToDelta } from 'quill-delta-to-html';
+
+const turndownService = new TurndownService();
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -33,12 +37,27 @@ const TextEditor = forwardRef((props, ref) => {
     getSelection: () => (quill ? quill.getSelection() : null),
     setGeneratedText: (text) => {
       if (quill) {
-        const html = marked(text); // Convert Markdown to HTML
-        const delta = quill.clipboard.convert(html); // Convert HTML to Delta format
-        quill.setContents(delta); // Set formatted content in the editor
+        console.log('Generated Text (Markdown):', text);
+
+        // Convert Markdown to HTML
+        const html = marked(text);
+        console.log('Converted HTML:', html);
+
+        // Convert HTML to Delta format
+        const delta = quill.clipboard.convert(html);
+        console.log('Converted Delta:', delta);
+
+        // Set content in Quill
+        quill.setContents(delta);
+        
+        // Alternative approach: Directly setting HTML (for debugging)
+        quill.root.innerHTML = html;
+        console.log('Editor root innerHTML set directly');
+      } else {
+        console.warn("Quill editor instance not ready");
       }
     }
-  }));
+  }), [quill]);
   
   const wrapperRef = useCallback((wrapper) => {
     if (!wrapper) return;

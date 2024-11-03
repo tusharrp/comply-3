@@ -31,7 +31,7 @@ function App() {
 
   const handleEditorChange = (data) => {
     const editor = editorRef.current.getEditorInstance();
-    editor.setGeneratedText(data); // This will set the new content in the editor
+    editorRef.current.setGeneratedText(data); // This will set the new content in the editor
   };
 
   // Function to handle form submission from InputBox
