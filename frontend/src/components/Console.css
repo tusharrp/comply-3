@@ -1,14 +1,20 @@
 /* Main container styling for Console */
 .console {
+    font-family: 'Inter', Arial, sans-serif; /* or use 'Roboto' if you chose that */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Space between top and bottom sections */
     width: 200px;                  /* Sidebar width */
     height: 100vh;                 /* Full viewport height */
-    background-color: #222;        /* Sidebar background color */
-    color: white;
+    background: linear-gradient(135deg, #2b2b2b, #232323);
+    color: #fafafa;
     padding: 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2); /* Shadow on left side */
+    padding-top: 100px; 
+    border-right: 1px solid #0a0a0a;
+    box-shadow: 3px 0 12px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    box-sizing: border-box;
+    gap: 24px;
 }
 
 /* Top section styling */

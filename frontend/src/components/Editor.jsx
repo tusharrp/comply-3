@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import debounce from "lodash/debounce";
 import { marked } from 'marked'; // Import marked
 import TurndownService from 'turndown';
-import { convertHtmlToDelta } from 'quill-delta-to-html';
 
 const turndownService = new TurndownService();
 
@@ -21,7 +20,7 @@ const TOOLBAR_OPTIONS = [
   [{ color: [] }, { background: [] }],
   [{ script: 'sub' }, { script: 'super' }],
   [{ align: [] }],
-  ['image', 'blockquote', 'code-block'],
+  ['image', 'blockquote'],
   ['clean'],
 ];
 
@@ -30,6 +29,7 @@ const TextEditor = forwardRef((props, ref) => {
   const [quill, setQuill] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [hasContent, setHasContent] = useState(false);
+  const { setItems } = props; // Destructure setItems from props
 
   useImperativeHandle(ref, () => ({
     getEditorInstance: () => quill,
@@ -37,31 +37,18 @@ const TextEditor = forwardRef((props, ref) => {
     getSelection: () => (quill ? quill.getSelection() : null),
     setGeneratedText: (text) => {
       if (quill) {
-        console.log('Generated Text (Markdown):', text);
-
-        // Convert Markdown to HTML
         const html = marked(text);
-        console.log('Converted HTML:', html);
-
-        // Convert HTML to Delta format
         const delta = quill.clipboard.convert(html);
-        console.log('Converted Delta:', delta);
-
-        // Set content in Quill
         quill.setContents(delta);
-        
-        // Alternative approach: Directly setting HTML (for debugging)
         quill.root.innerHTML = html;
-        console.log('Editor root innerHTML set directly');
       } else {
         console.warn("Quill editor instance not ready");
       }
     }
   }), [quill]);
-  
+
   const wrapperRef = useCallback((wrapper) => {
     if (!wrapper) return;
-
     wrapper.innerHTML = '';
     const editor = document.createElement('div');
     wrapper.append(editor);
@@ -96,7 +83,6 @@ const TextEditor = forwardRef((props, ref) => {
 
       setHasContent(quill.getText().trim().length > 0);
 
-      // Add paste handler for markdown
       quill.root.addEventListener('paste', handlePaste);
       return () => quill.root.removeEventListener('paste', handlePaste);
     }
@@ -106,9 +92,9 @@ const TextEditor = forwardRef((props, ref) => {
     e.preventDefault();
     const text = e.clipboardData.getData('text');
     if (text) {
-      const html = marked(text); // Convert Markdown to HTML
+      const html = marked(text);
       const delta = quill.clipboard.convert(html);
-      quill.setContents(delta); // Replace editor content with formatted HTML
+      quill.setContents(delta);
     }
   }, [quill]);
 
@@ -138,7 +124,18 @@ const TextEditor = forwardRef((props, ref) => {
       return () => quill.off('text-change', handleTextChange);
     }
   }, [quill, debouncedSaveContent]);
-  
+
+  const handleAddSymbol = () => {
+    if (quill) {
+      const length = quill.getLength();
+
+      // Call setItems with title and text for the new item
+      setItems(prevItems => [
+        ...prevItems,
+        { title: 'New Symbol', text: quill.getText() }
+      ]);
+    }
+  };
 
   return (
     <div className="editor-container">
@@ -148,12 +145,7 @@ const TextEditor = forwardRef((props, ref) => {
         <div className="editor-button-container">
           <button
             className="add-symbol-button"
-            onClick={() => {
-              if (quill) {
-                const length = quill.getLength();
-                quill.insertText(length - 1, '+');
-              }
-            }}
+            onClick={handleAddSymbol}
           >
             +
           </button>

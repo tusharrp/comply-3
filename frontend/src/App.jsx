@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import TextEditor from './components/Editor';
@@ -10,6 +10,34 @@ function App() {
   const [editorContent, setEditorContent] = useState(''); // State to hold editor content
   const editorRef = useRef(); // Reference to TextEditor
   const inputRef = useRef();  // Reference to InputBox
+  const [items, setItems] = useState([]);
+
+  // Initial items for testing
+  useEffect(() => {
+    const initialItems = [
+      { title: 'Item 1', text: 'This is the first item.' },
+      { title: 'Item 2', text: 'This is the second item.' },
+      { title: 'Item 3', text: 'This is the third item.' },
+    ];
+    setItems(initialItems);
+  }, []);
+
+  const addItem = (newTitle, newText) => {
+    setItems([...items, { title: newTitle, text: newText }]);
+    console.log(items);
+  };
+
+  const [dropdownValues, setDropdownValues] = useState({
+    documentType: '',
+    section: '',
+  });
+
+  const handleDropdownChange = (dropdownType, value) => {
+    setDropdownValues(prevValues => ({
+      ...prevValues,
+      [dropdownType]: value,
+    }));
+  };
 
   // Function to get editor content and selection
   const getValues = () => {
@@ -43,8 +71,8 @@ function App() {
 
       const data = {
         industry: 'Pharmaceutical Manufacturing',
-        doctype: 'SOP',
-        title: '',
+        doctype: dropdownValues.documentType,
+        title: dropdownValues.section,
         context: editorContent,
         textToEdit: textToEdit,
         prompt: prompt,
@@ -69,19 +97,40 @@ function App() {
     }
   };
 
+  const handleConsoleClick = (index) => {
+    const editor = editorRef.current.getEditorInstance();
+    const text = editor.getText();
+  
+    setItems((prevItems) => {
+      const duplicateIndex = prevItems.findIndex((item) => item.title === dropdownValues.section);
+  
+      if (duplicateIndex !== -1) {
+        // Create a new array with the updated text at the duplicate index
+        return prevItems.map((item, idx) =>
+          idx === duplicateIndex ? { ...item, text: text } : item
+        );
+      } else {
+        // Append the new item to the array
+        return [...prevItems, { title: dropdownValues.section, text: text }];
+      }
+    });
+  };
+  
+
+
   return (
     <div className="app-container">
       <div className='taskbar'>
-          <Taskbar/>
+          <Taskbar onDropdownChange={handleDropdownChange} />
       </div>
       <Sidebar />
       <div className='middle-section'>
         <div className='editor'>
-          <TextEditor ref={editorRef} content={editorContent} />
+          <TextEditor ref={editorRef} content={editorContent} setItems={setItems} />
         </div>
         <InputBox ref={inputRef} onSubmit={handleSubmit} />  {/* Pass handleSubmit to InputBox */}
       </div>
-      <Console />
+      <Console items={items} onItemSelect={handleConsoleClick} />
     </div>
   );
 }

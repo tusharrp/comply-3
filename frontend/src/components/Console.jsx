@@ -1,16 +1,20 @@
 import React from 'react';
 import './Console.css';
 
-const Console = () => {
+const Console = ({ items = [], onItemSelect }) => {
     return (
         <div className="console">
             <div className="console-top">
-                {/* Top section content */}
-                <h3>Top Section</h3>
-                <p>Index Will go here should span half the console</p>
+                <h3>Index</h3>
+                <div>
+                    {items.map((item, index) => (
+                        <div key={index} onClick={() => onItemSelect(index)} style={{ cursor: 'pointer' }}>
+                            <strong>{item.title}</strong>
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="console-bottom">
-                {/* Bottom section content */}
                 <h3>Bottom Section</h3>
                 <p>Thinking of adding a chatbot/helper in this section</p>
             </div>
@@ -18,4 +22,6 @@ const Console = () => {
     );
 };
 
+
 export default Console;
+

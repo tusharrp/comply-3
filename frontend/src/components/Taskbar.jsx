@@ -4,17 +4,12 @@ import './Taskbar.css';
 import { FaUserCircle, FaSearch, FaCog, FaSignOutAlt, FaBell } from 'react-icons/fa';
 import logo from '../assets/comply-logo-white.svg';
 
-const Taskbar = () => {
+const Taskbar = ({ onDropdownChange }) => {  // Add `onDropdownChange` prop
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isNotificationOpen, setNotificationOpen] = useState(false);
 
-  const toggleProfileMenu = () => {
-    setProfileMenuOpen(!isProfileMenuOpen);
-  };
-
-  const toggleNotificationMenu = () => {
-    setNotificationOpen(!isNotificationOpen);
-  };
+  const toggleProfileMenu = () => setProfileMenuOpen(!isProfileMenuOpen);
+  const toggleNotificationMenu = () => setNotificationOpen(!isNotificationOpen);
 
   const notifications = [
     "File upload completed.",
@@ -23,15 +18,18 @@ const Taskbar = () => {
     "Compliance check passed successfully.",
   ];
 
+  // Handle dropdown changes and call the parent function
+  const handleDropdownChange = (event, dropdownType) => {
+    onDropdownChange(dropdownType, event.target.value);
+  };
+
   return (
     <div className="taskbar">
-      {/* Logo Section */}
       <div className="logo">
         <img src={logo} alt="Comply Logo" className="logo-img" />
         <span>COMPLY</span>
       </div>
 
-      {/* Search Bar */}
       <div className="search-bar">
         <input type="text" placeholder="Search documents, reports, etc." />
         <FaSearch className="search-icon" />
@@ -39,7 +37,7 @@ const Taskbar = () => {
 
       {/* Dropdown Section */}
       <div className="dropdown-group">
-        <select className="dropdown">
+        <select className="dropdown" onChange={(e) => handleDropdownChange(e, 'documentType')}>
           <option>Document Type</option>
           <option>Deviation Report</option>
           <option>SOP Report</option>
@@ -47,7 +45,7 @@ const Taskbar = () => {
           <option>EIA Report</option>
         </select>
 
-        <select className="dropdown">
+        <select className="dropdown" onChange={(e) => handleDropdownChange(e, 'section')}>
           <option>Section</option>
           <option>Deviation Description</option>
           <option>Impact Assessment</option>
@@ -62,7 +60,6 @@ const Taskbar = () => {
         </select>
       </div>
 
-      {/* Notification Icon */}
       <div className="notification-menu" onClick={toggleNotificationMenu}>
         <FaBell className="notification-icon" />
         {isNotificationOpen && (
@@ -80,7 +77,6 @@ const Taskbar = () => {
         )}
       </div>
 
-      {/* Profile and Settings */}
       <div className="profile-menu" onClick={toggleProfileMenu}>
         <FaUserCircle className="profile-icon" />
         {isProfileMenuOpen && (
