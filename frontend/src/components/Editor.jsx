@@ -29,7 +29,7 @@ const TextEditor = forwardRef((props, ref) => {
   const [quill, setQuill] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [hasContent, setHasContent] = useState(false);
-  const { setItems } = props; // Destructure setItems from props
+  const { setItems, onAddItem } = props; // Destructure setItems from props
 
   useImperativeHandle(ref, () => ({
     getEditorInstance: () => quill,
@@ -128,12 +128,19 @@ const TextEditor = forwardRef((props, ref) => {
   const handleAddSymbol = () => {
     if (quill) {
       const length = quill.getLength();
-
-      // Call setItems with title and text for the new item
-      setItems(prevItems => [
-        ...prevItems,
-        { title: 'New Symbol', text: quill.getText() }
-      ]);
+      setItems((prevItems) => {
+        const duplicateIndex = prevItems.findIndex((item) => item.title === dropdownValues.section);
+    
+        if (duplicateIndex !== -1) {
+          // Create a new array with the updated text at the duplicate index
+          return prevItems.map((item, idx) =>
+            idx === duplicateIndex ? { ...item, text: text } : item
+          );
+        } else {
+          // Append the new item to the array
+          return [...prevItems, { title: dropdownValues.section, text: text }];
+        }
+      });
     }
   };
 
@@ -145,7 +152,7 @@ const TextEditor = forwardRef((props, ref) => {
         <div className="editor-button-container">
           <button
             className="add-symbol-button"
-            onClick={handleAddSymbol}
+            onClick={() => onAddItem(3)}
           >
             +
           </button>

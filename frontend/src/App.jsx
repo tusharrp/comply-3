@@ -15,15 +15,15 @@ function App() {
   // Initial items for testing
   useEffect(() => {
     const initialItems = [
-      { title: 'Item 1', text: 'This is the first item.' },
-      { title: 'Item 2', text: 'This is the second item.' },
-      { title: 'Item 3', text: 'This is the third item.' },
+      { section: 'Item 1', text: 'This is the first item.' },
+      { section: 'Item 2', text: 'This is the second item.' },
+      { section: 'Item 3', text: 'This is the third item.' },
     ];
     setItems(initialItems);
   }, []);
 
-  const addItem = (newTitle, newText) => {
-    setItems([...items, { title: newTitle, text: newText }]);
+  const addItem = (newsection, newText) => {
+    setItems([...items, { section: newsection, text: newText }]);
     console.log(items);
   };
 
@@ -72,7 +72,7 @@ function App() {
       const data = {
         industry: 'Pharmaceutical Manufacturing',
         doctype: dropdownValues.documentType,
-        title: dropdownValues.section,
+        section: dropdownValues.section,
         context: editorContent,
         textToEdit: textToEdit,
         prompt: prompt,
@@ -102,7 +102,7 @@ function App() {
     const text = editor.getText();
   
     setItems((prevItems) => {
-      const duplicateIndex = prevItems.findIndex((item) => item.title === dropdownValues.section);
+      const duplicateIndex = prevItems.findIndex((item) => item.section === dropdownValues.section);
   
       if (duplicateIndex !== -1) {
         // Create a new array with the updated text at the duplicate index
@@ -111,7 +111,7 @@ function App() {
         );
       } else {
         // Append the new item to the array
-        return [...prevItems, { title: dropdownValues.section, text: text }];
+        return [...prevItems, { section: dropdownValues.section, text: text }];
       }
     });
   };
@@ -126,7 +126,7 @@ function App() {
       <Sidebar />
       <div className='middle-section'>
         <div className='editor'>
-          <TextEditor ref={editorRef} content={editorContent} setItems={setItems} />
+          <TextEditor ref={editorRef} content={editorContent} setItems={setItems} onAddItem={handleConsoleClick}  />
         </div>
         <InputBox ref={inputRef} onSubmit={handleSubmit} />  {/* Pass handleSubmit to InputBox */}
       </div>
