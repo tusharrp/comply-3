@@ -38,9 +38,12 @@ const TextEditor = forwardRef((props, ref) => {
     setGeneratedText: (text) => {
       if (quill) {
         const html = marked(text);
+        console.log(html);
         const delta = quill.clipboard.convert(html);
-        quill.setContents(delta);
-        quill.root.innerHTML = html;
+        console.log(delta);
+        //quill.setContents(delta);
+        //quill.root.innerHTML = html;
+        quill.clipboard.dangerouslyPasteHTML(0, html);
       } else {
         console.warn("Quill editor instance not ready");
       }
