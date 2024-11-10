@@ -4,7 +4,7 @@ import { useItems } from '../ItemsContext';
 
 const DocPreview = () => {
   const location = useLocation();
-  const items = useItems();
+  const { items, setItems, addItem } = useItems();
 
   return (
     <div>

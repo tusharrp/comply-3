@@ -1,12 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Console.css';
-import { useItems } from '../ItemsContext';
+//import { useItems } from '../ItemsContext';
 
-const Console = ({ onItemSelect }) => {
+const Console = ({ items, onItemSelect }) => {
     const navigate = useNavigate();
+    console.log("Rendering Console with items:", items);
 
-    const items = useItems();
+
 
     return (
         <div className="console">
@@ -14,9 +15,9 @@ const Console = ({ onItemSelect }) => {
                 <h3>Index</h3>
                 <button onClick={() => navigate('/docpreview')}>Go to DocPreview</button>
                 <div>
-                    {Array.isArray(items) ? (
+                    {Array.isArray(items) && items.length > 0 ? (
                         items.map((item, index) => (
-                            <div key={index} style={{ cursor: 'pointer' }}>
+                            <div key={index} style={{ cursor: 'pointer' }} onClick={() => onItemSelect(index)}>
                                 <strong>{item.section}</strong>
                             </div>
                         ))

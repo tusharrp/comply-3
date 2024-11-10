@@ -130,11 +130,11 @@ function AppLayout() {
         <Sidebar />
         <div className='middle-section'>
           <div className='editor'>
-            <TextEditor ref={editorRef} content={editorContent} setItems={setItems} onAddItem={handleConsoleClick} />
+            <TextEditor ref={editorRef} content={editorContent} setItems={setItems} onAddItem={handleConsoleClick} section={dropdownValues.section} />
           </div>
           <InputBox ref={inputRef} onSubmit={handleSubmit} />
         </div>
-        <Console onItemSelect={handleConsoleClick} />
+        <Console items={items} onItemSelect={handleConsoleClick} />
       </div>
   );
 }

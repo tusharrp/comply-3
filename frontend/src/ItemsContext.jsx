@@ -7,11 +7,7 @@ export const ItemsProvider = ({ children }) => {
 
   // Initialize items with some test data
   useEffect(() => {
-    const initialItems = [
-      { section: 'Item 1', text: 'This is the first item.' },
-      { section: 'Item 2', text: 'This is the second item.' },
-      { section: 'Item 3', text: 'This is the third item.' },
-    ];
+    const initialItems = [];
     setItems(initialItems);
   }, []);
 

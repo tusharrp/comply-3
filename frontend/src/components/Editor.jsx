@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import debounce from "lodash/debounce";
 import { marked } from 'marked'; // Import marked
 import TurndownService from 'turndown';
+import { useItems } from '../ItemsContext';
+
 
 const turndownService = new TurndownService();
 
@@ -29,7 +31,9 @@ const TextEditor = forwardRef((props, ref) => {
   const [quill, setQuill] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [hasContent, setHasContent] = useState(false);
-  const { setItems, onAddItem } = props; // Destructure setItems from props
+  const { items, setItems, addItem } = useItems();
+  const { section } = props;
+
 
   useImperativeHandle(ref, () => ({
     getEditorInstance: () => quill,
@@ -44,6 +48,7 @@ const TextEditor = forwardRef((props, ref) => {
         //quill.setContents(delta);
         //quill.root.innerHTML = html;
         quill.clipboard.dangerouslyPasteHTML(0, html);
+        setHasContent(true);
       } else {
         console.warn("Quill editor instance not ready");
       }
@@ -130,23 +135,25 @@ const TextEditor = forwardRef((props, ref) => {
 
   const handleAddSymbol = () => {
     if (quill) {
-      const length = quill.getLength();
-      setItems((prevItems) => {
-        const duplicateIndex = prevItems.findIndex((item) => item.title === dropdownValues.section);
-    
+      const text = quill.root.innerHTML.trim(); // Retrieve HTML and trim any extra whitespace
+  
+      setItems((items) => {
+        const duplicateIndex = items.findIndex((item) => item.section === section);
+  
         if (duplicateIndex !== -1) {
-          // Create a new array with the updated text at the duplicate index
-          return prevItems.map((item, idx) =>
+          // Update the text at the duplicate index
+          return items.map((item, idx) =>
             idx === duplicateIndex ? { ...item, text: text } : item
           );
         } else {
           // Append the new item to the array
-          return [...prevItems, { title: dropdownValues.section, text: text }];
+          return [...items, { section: section, text: text }];
         }
       });
     }
+    console.log(items);
   };
-
+  
   return (
     <div className="editor-container">
       <div className="quill-wrapper" ref={wrapperRef} />
@@ -155,7 +162,7 @@ const TextEditor = forwardRef((props, ref) => {
         <div className="editor-button-container">
           <button
             className="add-symbol-button"
-            onClick={() => onAddItem(3)}
+            onClick={handleAddSymbol}
           >
             +
           </button>
