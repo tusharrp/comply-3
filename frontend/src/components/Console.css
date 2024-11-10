@@ -29,3 +29,25 @@
     margin-top: auto;
     height: 50vh;
 }
+
+.console-top button {
+    margin-left: 10px;
+    padding: 12px 20px;
+    background-color: #0078fe;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .console-top button:disabled {
+    background-color: #0078fe;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .console-top button:hover:not(:disabled) {
+    background-color: #005bb5;
+  }

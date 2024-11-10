@@ -5,27 +5,31 @@ import TextEditor from './components/Editor';
 import InputBox from './components/InputBox';
 import Taskbar from './components/Taskbar';
 import Console from './components/Console';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import DocPreview from './pages/DocPreview';
+import { ItemsProvider, useItems } from './ItemsContext';
 
-function App() {
+function AppLayout() {
   const [editorContent, setEditorContent] = useState(''); // State to hold editor content
   const editorRef = useRef(); // Reference to TextEditor
   const inputRef = useRef();  // Reference to InputBox
-  const [items, setItems] = useState([]);
+  const { items, setItems, addItem } = useItems();
+  // const [items, setItems] = useState([]);
 
-  // Initial items for testing
-  useEffect(() => {
-    const initialItems = [
-      { section: 'Item 1', text: 'This is the first item.' },
-      { section: 'Item 2', text: 'This is the second item.' },
-      { section: 'Item 3', text: 'This is the third item.' },
-    ];
-    setItems(initialItems);
-  }, []);
+  // // Initial items for testing
+  // useEffect(() => {
+  //   const initialItems = [
+  //     { section: 'Item 1', text: 'This is the first item.' },
+  //     { section: 'Item 2', text: 'This is the second item.' },
+  //     { section: 'Item 3', text: 'This is the third item.' },
+  //   ];
+  //   setItems(initialItems);
+  // }, []);
 
-  const addItem = (newsection, newText) => {
-    setItems([...items, { section: newsection, text: newText }]);
-    console.log(items);
-  };
+  // const addItem = (newsection, newText) => {
+  //   setItems([...items, { section: newsection, text: newText }]);
+  //   console.log(items);
+  // };
 
   const [dropdownValues, setDropdownValues] = useState({
     documentType: '',
@@ -119,19 +123,35 @@ function App() {
 
 
   return (
-    <div className="app-container">
-      <div className='taskbar'>
+      <div className="app-container">
+        <div className='taskbar'>
           <Taskbar onDropdownChange={handleDropdownChange} />
-      </div>
-      <Sidebar />
-      <div className='middle-section'>
-        <div className='editor'>
-          <TextEditor ref={editorRef} content={editorContent} setItems={setItems} onAddItem={handleConsoleClick}  />
         </div>
-        <InputBox ref={inputRef} onSubmit={handleSubmit} />  {/* Pass handleSubmit to InputBox */}
+        <Sidebar />
+        <div className='middle-section'>
+          <div className='editor'>
+            <TextEditor ref={editorRef} content={editorContent} setItems={setItems} onAddItem={handleConsoleClick} />
+          </div>
+          <InputBox ref={inputRef} onSubmit={handleSubmit} />
+        </div>
+        <Console onItemSelect={handleConsoleClick} />
       </div>
-      <Console items={items} onItemSelect={handleConsoleClick} />
-    </div>
+  );
+}
+
+function App() {
+  return (
+    <ItemsProvider>
+    <Router>
+      <Routes>
+        {/* Main layout for the app */}
+        <Route path="/" element={<AppLayout />} />
+        
+        {/* Standalone route for DocPreview */}
+        <Route path="/docpreview" element={<DocPreview />} />
+      </Routes>
+    </Router>
+    </ItemsProvider>
   );
 }
 
