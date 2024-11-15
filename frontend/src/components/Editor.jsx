@@ -10,7 +10,12 @@ import debounce from "lodash/debounce";
 import { marked } from 'marked'; // Import marked
 import TurndownService from 'turndown';
 import { useItems } from '../ItemsContext';
+import QuillTableBetter from 'quill-table-better';
+import 'quill-table-better/dist/quill-table-better.css'
 
+Quill.register({
+  'modules/table-better': QuillTableBetter
+}, true);
 
 const turndownService = new TurndownService();
 
@@ -22,9 +27,13 @@ const TOOLBAR_OPTIONS = [
   [{ color: [] }, { background: [] }],
   [{ script: 'sub' }, { script: 'super' }],
   [{ align: [] }],
+  ['table-better'],
   ['image', 'blockquote'],
   ['clean'],
+  
 ];
+
+
 
 const TextEditor = forwardRef((props, ref) => {
   const { id: documentId } = useParams();
@@ -64,6 +73,15 @@ const TextEditor = forwardRef((props, ref) => {
     const q = new Quill(editor, {
       theme: 'snow',
       modules: {
+        table: false,
+        'table-better': {
+          language: 'en_US',
+          menus: ['column', 'row', 'merge', 'table', 'cell', 'wrap', 'delete'],
+          toolbarTable: true
+        },
+        keyboard: {
+          bindings: QuillTableBetter.keyboardBindings
+        },
         toolbar: TOOLBAR_OPTIONS,
         markdownShortcuts: {
           bold: true,
@@ -73,16 +91,20 @@ const TextEditor = forwardRef((props, ref) => {
           header: true,
           blockquote: true,
           code: true,
-          list: true
+          list: true,
+          table: true
         }
       },
     });
     new MarkdownShortcuts(q);
+    
 
     q.disable();
     q.setText('Loading...');
     setQuill(q);
   }, []);
+
+  
 
   useEffect(() => {
     if (quill) {
@@ -90,6 +112,24 @@ const TextEditor = forwardRef((props, ref) => {
       quill.root.style.color = 'black';
 
       setHasContent(quill.getText().trim().length > 0);
+
+      // // Get the toolbar instance
+      // const toolbar = quill.getModule('toolbar');
+
+      // // Create a custom button for inserting a table
+      // const buttonContainer = document.querySelector('.ql-toolbar');
+      // const tableButton = document.createElement('button');
+      // tableButton.innerHTML = 'Table'; // You can use an icon here if preferred
+      // tableButton.classList.add('ql-table-button');
+
+      // // Append the button to the toolbar
+      // buttonContainer.appendChild(tableButton);
+
+      // // Add event listener to insert a table on button click
+      // tableButton.addEventListener('click', () => {
+      //   quill.getModule('better-table').insertTable(3, 3); // Example: insert a 3x3 table
+      // });
+
 
       quill.root.addEventListener('paste', handlePaste);
       return () => quill.root.removeEventListener('paste', handlePaste);

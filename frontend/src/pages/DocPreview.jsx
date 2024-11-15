@@ -8,6 +8,12 @@ import { useParams } from "react-router-dom"
 import './DocPreview.css'
 import MarkdownShortcuts from 'quilljs-markdown';
 import { marked } from 'marked';
+import QuillTableBetter from 'quill-table-better';
+import 'quill-table-better/dist/quill-table-better.css'
+
+Quill.register({
+  'modules/table-better': QuillTableBetter
+}, true);
 
 
 const TOOLBAR_OPTIONS = [
@@ -18,6 +24,7 @@ const TOOLBAR_OPTIONS = [
   [{ color: [] }, { background: [] }],
   [{ script: 'sub' }, { script: 'super' }],
   [{ align: [] }],
+  ['table-better'],
   ['image', 'blockquote'],
   ['clean'],
 ];
@@ -38,6 +45,15 @@ export function TextEditor() {
     const q = new Quill(editor, {
       theme: 'snow',
       modules: {
+        table: false,
+        'table-better': {
+          language: 'en_US',
+          menus: ['column', 'row', 'merge', 'table', 'cell', 'wrap', 'delete'],
+          toolbarTable: true
+        },
+        keyboard: {
+          bindings: QuillTableBetter.keyboardBindings
+        },
         toolbar: TOOLBAR_OPTIONS,
         markdownShortcuts: {
           bold: true,
