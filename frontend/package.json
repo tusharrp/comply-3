@@ -17,6 +17,7 @@
     "@mui/material": "^6.1.5",
     "bootstrap": "^5.3.3",
     "help": "^3.0.2",
+    "html2pdf.js": "^0.10.2",
     "lodash": "^4.17.21",
     "markdown-it": "^14.1.0",
     "marked": "^14.1.3",

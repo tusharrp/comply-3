@@ -10,6 +10,7 @@ import MarkdownShortcuts from 'quilljs-markdown';
 import { marked } from 'marked';
 import QuillTableBetter from 'quill-table-better';
 import 'quill-table-better/dist/quill-table-better.css'
+import htmltopdf from 'html2pdf.js'
 
 Quill.register({
   'modules/table-better': QuillTableBetter
@@ -113,16 +114,28 @@ const DocPreview = () => {
   const location = useLocation();
   const { items, setItems, addItem } = useItems();
 
+  const handlePrint = () => {
+    const options = {
+      margin: 1,
+      filename: 'document.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    const element = document.querySelector('.ql-editor');
+    htmltopdf().from(element).set(options).save();
+  };
+
   return (
     <>
     <div className="taskbar">
-        <h2>Taskbar</h2>
-        {/* Add any buttons or other elements for the taskbar here */}
-      </div>
+      <h2>Taskbar</h2>
+      <button className="print-button" onClick={handlePrint}>Print</button>
+    </div>
     <div className="doc-preview-container">
       
       <div className="title">
-        <h1>Document Preview</h1>
       </div>
     </div>
     <TextEditor />
